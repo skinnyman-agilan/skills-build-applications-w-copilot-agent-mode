@@ -1,20 +1,12 @@
-import { useEffect, useState } from 'react';
+import { Link, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Activities from './components/Activities';
+import Leaderboard from './components/Leaderboard';
+import Teams from './components/Teams';
+import Users from './components/Users';
+import Workouts from './components/Workouts';
 
 function App() {
-  const [dashboard, setDashboard] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/dashboard')
-      .then((response) => response.json())
-      .then((data) => {
-        setDashboard(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
   return (
     <div className="container py-4">
       <header className="rounded-4 p-4 text-white shadow-sm" style={{ background: 'linear-gradient(135deg, #1d4ed8, #0f172a)' }}>
@@ -28,72 +20,25 @@ function App() {
         </div>
       </header>
 
-      <section className="row g-4 mt-1">
-        <div className="col-md-4">
-          <div className="card border-0 shadow-sm h-100">
-            <div className="card-body">
-              <p className="text-muted mb-2">Top student</p>
-              <h2 className="h4 mb-1">{loading ? 'Loading…' : dashboard?.users?.[0]?.name || 'No data'}</h2>
-              <p className="mb-0 text-success fw-semibold">{loading ? '—' : `${dashboard?.users?.[0]?.score || 0} points`}</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4">
-          <div className="card border-0 shadow-sm h-100">
-            <div className="card-body">
-              <p className="text-muted mb-2">Teams</p>
-              <h2 className="h4 mb-1">{loading ? 'Loading…' : `${dashboard?.teams?.length || 0} active squads`}</h2>
-              <p className="mb-0 text-primary fw-semibold">Weekly goal stays on track</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4">
-          <div className="card border-0 shadow-sm h-100">
-            <div className="card-body">
-              <p className="text-muted mb-2">Suggested workout</p>
-              <h2 className="h4 mb-1">{loading ? 'Loading…' : dashboard?.workouts?.[0]?.title || 'Rest and recover'}</h2>
-              <p className="mb-0 text-secondary">{loading ? '—' : dashboard?.workouts?.[0]?.focus || 'Keep moving'}</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <nav className="nav nav-pills mt-4 flex-wrap gap-2">
+        <Link className="nav-link active" to="/">Overview</Link>
+        <Link className="nav-link" to="/users">Users</Link>
+        <Link className="nav-link" to="/teams">Teams</Link>
+        <Link className="nav-link" to="/activities">Activities</Link>
+        <Link className="nav-link" to="/leaderboard">Leaderboard</Link>
+        <Link className="nav-link" to="/workouts">Workouts</Link>
+      </nav>
 
-      <section className="row g-4 mt-2">
-        <div className="col-lg-7">
-          <div className="card border-0 shadow-sm">
-            <div className="card-body">
-              <h3 className="h5 mb-3">Recent activity</h3>
-              <ul className="list-group list-group-flush">
-                {loading ? (
-                  <li className="list-group-item px-0">Loading recent activity…</li>
-                ) : dashboard?.recentActivities?.map((activity) => (
-                  <li className="list-group-item px-0" key={activity._id}>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <span>{activity.user} logged {activity.type}</span>
-                      <span className="text-muted">{activity.minutes} min</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-5">
-          <div className="card border-0 shadow-sm">
-            <div className="card-body">
-              <h3 className="h5 mb-3">Team highlights</h3>
-              {loading ? (
-                <p className="text-muted">Loading teams…</p>
-              ) : dashboard?.teams?.map((team) => (
-                <div className="d-flex justify-content-between align-items-center py-2 border-bottom" key={team._id}>
-                  <span className="fw-semibold">{team.name}</span>
-                  <span className="badge bg-light text-dark">{team.members} members</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="mt-4">
+        <Routes>
+          <Route path="/" element={<div className="row g-4"><div className="col-lg-6"><Users /></div><div className="col-lg-6"><Teams /></div><div className="col-lg-6"><Activities /></div><div className="col-lg-6"><Workouts /></div></div>} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/teams" element={<Teams />} />
+          <Route path="/activities" element={<Activities />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/workouts" element={<Workouts />} />
+        </Routes>
+      </div>
     </div>
   );
 }
