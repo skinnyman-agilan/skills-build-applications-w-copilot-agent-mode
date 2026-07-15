@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { buildApiUrl } from '../utils/api';
 
+// Codespaces endpoint target: https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/
 const leaderboardEndpoint = buildApiUrl('leaderboard');
 
 function Leaderboard() {
