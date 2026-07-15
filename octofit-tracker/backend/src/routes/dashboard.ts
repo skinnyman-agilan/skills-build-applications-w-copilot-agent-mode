@@ -6,7 +6,7 @@ import { Workout } from '../models/Workout';
 
 const router = Router();
 
-router.get('/api/dashboard', async (_req, res) => {
+router.get(['/api/dashboard', '/api/dashboard/'], async (_req, res) => {
   try {
     const [users, teams, activities, workouts] = await Promise.all([
       User.find().lean(),
